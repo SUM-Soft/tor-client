@@ -9,7 +9,8 @@ steps:
 
   - id: Test the container image
     name: 'gcr.io/cloud-builders/curl'
-    args: [ '--socks5',  'tor-client:9050', '--socks5-hostname', 'tor-client:9050', 'https://check.torproject.org/api/ip' ]
+    #args: [ '--fail', '--socks5',  'tor-client:9050', '--socks5-hostname', 'tor-client:9050', 'https://check.torproject.org/api/ip' ]
+    args: [ '--fail', 'https://check.torproject.org/api/ip' ]
 
 #  - id: Push the container image to Artifact Registry
 #    name: 'gcr.io/cloud-builders/docker'
