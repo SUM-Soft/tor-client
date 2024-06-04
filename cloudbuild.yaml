@@ -5,11 +5,11 @@ steps:
 
   - id: Run the container image
     name: 'gcr.io/cloud-builders/docker'
-    args: [ 'run', '--network=cloudbuild', '-d', '-p', '9050:9050', '${_IMAGE}' ]
+    args: [ 'run', '--network=cloudbuild', '--name', 'tor-client', '-d', '-p', '9050:9050', '${_IMAGE}' ]
 
   - id: Test the container image
     name: 'gcr.io/cloud-builders/curl'
-    args: [ '--fail', '--socks5',  'localhost:9050', '--socks5-hostname', 'localhost:9050', 'https://check.torproject.org/api/ip', '||', 'exit 1' ]
+    args: [ '--fail', '--socks5',  'tor-client:9050', '--socks5-hostname', 'tor-client:9050', 'https://check.torproject.org/api/ip', '||', 'exit 1' ]
 
 #  - id: Push the container image to Artifact Registry
 #    name: 'gcr.io/cloud-builders/docker'
