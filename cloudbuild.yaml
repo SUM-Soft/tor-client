@@ -1,0 +1,18 @@
+steps:
+  - id: Build the container image
+    name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', '${_IMAGE}', '-t', '${_IMAGE_LATEST}', '.' ]
+
+  - id: Push the container image to Artifact Registry
+    name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', '${_IMAGE}' ]
+
+substitutions:
+  _IMAGE: 'europe-west4-docker.pkg.dev/${PROJECT_ID}/docker/tor-client:${SHORT_SHA}'
+  _IMAGE_LATEST: 'europe-west4-docker.pkg.dev/${PROJECT_ID}/docker/tor-client:latest'
+options:
+  dynamic_substitutions: true
+
+images:
+  - '${_IMAGE}'
+  - '${_IMAGE_LATEST}'
