@@ -19,10 +19,10 @@ jobs:
         run: docker build -t test .
 
       - name: Run the container image
-        run: docker run --name tor-client -d -p 9050:9050 test
+        run: docker run -d -p 9050:9050 test
 
       - name: Test the container image
-        run: curl --socks5 tor-client:9050 --socks5-hostname tor-client:9050 https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
+        run: curl --socks5 localhost:9050 --socks5-hostname localhost:9050 https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
 
   auto-merge:
     if: github.actor == 'dependabot[bot]'
