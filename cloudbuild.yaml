@@ -12,9 +12,9 @@ steps:
     script: |
       curl --socks5 tor-client:9050 --socks5-hostname tor-client:9050 https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
 
-#  - id: Push the container image to Artifact Registry
-#    name: 'gcr.io/cloud-builders/docker'
-#    args: [ 'push', '${_IMAGE}' ]
+  - id: Push the container image to Artifact Registry
+    name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', '${_IMAGE}' ]
 
 substitutions:
   _IMAGE: 'europe-west4-docker.pkg.dev/${PROJECT_ID}/docker/tor-client:${SHORT_SHA}'
@@ -22,6 +22,6 @@ substitutions:
 options:
   dynamic_substitutions: true
 
-#images:
-#  - '${_IMAGE}'
-#  - '${_IMAGE_LATEST}'
+images:
+  - '${_IMAGE}'
+  - '${_IMAGE_LATEST}'
