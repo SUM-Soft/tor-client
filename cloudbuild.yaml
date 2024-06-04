@@ -1,17 +1,16 @@
 steps:
-#  - id: Build the container image
-#    name: 'gcr.io/cloud-builders/docker'
-#    args: [ 'build', '-t', '${_IMAGE}', '-t', '${_IMAGE_LATEST}', '.' ]
-#
-#  - id: Run the container image
-#    name: 'gcr.io/cloud-builders/docker'
-#    args: [ 'run', '--network=cloudbuild', '--name', 'tor-client', '-d', '-p', '9050:9050', '${_IMAGE}' ]
+  - id: Build the container image
+    name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', '${_IMAGE}', '-t', '${_IMAGE_LATEST}', '.' ]
+
+  - id: Run the container image
+    name: 'gcr.io/cloud-builders/docker'
+    args: [ 'run', '--network=cloudbuild', '--name', 'tor-client', '-d', '-p', '9050:9050', '${_IMAGE}' ]
 
   - id: Test the container image
     name: 'gcr.io/cloud-builders/curl'
-    #args: [ '--socks5',  'tor-client:9050', '--socks5-hostname', 'tor-client:9050', 'https://check.torproject.org/api/ip' ]
     script: |
-      curl https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
+      curl --socks5 tor-client:9050 --socks5-hostname tor-client:9050 https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
 
 #  - id: Push the container image to Artifact Registry
 #    name: 'gcr.io/cloud-builders/docker'
