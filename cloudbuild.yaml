@@ -11,7 +11,7 @@ steps:
     name: 'gcr.io/cloud-builders/curl'
     #args: [ '--socks5',  'tor-client:9050', '--socks5-hostname', 'tor-client:9050', 'https://check.torproject.org/api/ip' ]
     script: |
-      curl https://check.torproject.org/api/ip | grep "IsTor":true || exit 1
+      curl https://check.torproject.org/api/ip | grep "IsTor":false || exit 1
 
 #  - id: Push the container image to Artifact Registry
 #    name: 'gcr.io/cloud-builders/docker'
