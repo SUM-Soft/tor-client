@@ -1,0 +1,7 @@
+Log notice stdout
+SocksPort 9050
+EntryNodes {nl},{be},{de} StrictNodes 1
+ExitNodes {nl},{be},{de} StrictNodes 1
+LearnCircuitBuildTimeout 0
+CircuitBuildTimeout 10
+MaxCircuitDirtiness 10
