@@ -1,7 +1,6 @@
 name: Test & Merge Dependabot PR
 
-on:
-  pull_request_target:
+on: pull_request
 
 concurrency:
   group: ${{github.ref_name}}
@@ -13,7 +12,7 @@ jobs:
     name: Testing
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Build the container image
         run: docker build -t test .
