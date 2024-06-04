@@ -22,8 +22,8 @@ jobs:
       - name: Run the container image
         run: docker run -d -p 9050:9050 test
 
-      - name: Sleep for 10 seconds
-        run: sleep 10s
+      - name: Sleep for 30 seconds
+        run: sleep 30s
         shell: bash
 
       - name: Test the container image
