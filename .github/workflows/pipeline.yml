@@ -28,7 +28,7 @@ jobs:
           echo "SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
 
       - name: Build the container image
-        run: docker build -t ${{ env.IMAGE_NAME }}
+        run: docker build -t ${{ env.IMAGE_NAME }} .
 
       - name: Run the container image
         run: docker run -d -p 9050:9050 ${{ env.IMAGE_NAME }}
