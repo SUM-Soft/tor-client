@@ -49,8 +49,9 @@ jobs:
 
       - name: Tag & Push image
         run: |
-          docker tag ${{ env.IMAGE_NAME }}:latest ${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}
-          docker push ${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}
+          docker tag ${{ env.IMAGE_NAME }} ${{ env.IMAGE_NAME }}:latest
+          docker tag ${{ env.IMAGE_NAME }} ${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}
+          docker push ${{ env.IMAGE_NAME }} --all-tags
 
   auto-merge:
     if: github.actor == 'dependabot[bot]'
