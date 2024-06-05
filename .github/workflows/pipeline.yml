@@ -11,9 +11,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  PROJECT_ID: woladen-autos
   GAR: europe-west4-docker.pkg.dev
-  IMAGE_NAME: ${{ env.GAR }}/${{ env.PROJECT_ID }}/docker/tor-client
+  IMAGE_NAME: europe-west4-docker.pkg.dev/woladen-autos/docker/tor-client
 
 jobs:
   pipeline:
@@ -46,7 +45,7 @@ jobs:
         with:
           registry: ${{ env.GAR }}
           username: _json_key
-          password: ${{ secrets.GITHUB_ACTIONS_SA_CREDENTIALS }}
+          password: ${{ secrets.GCP_GITHUB_ACTIONS_SA_CREDENTIALS }}
 
       - name: Tag & Push image
         run: |
