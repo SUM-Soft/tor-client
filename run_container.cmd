@@ -1,2 +1,2 @@
-docker run --rm -p 9050:9050 tor
-REM docker run -d -p 9050:9050 --restart always tor
+docker run --rm -p 32905:32905 tor
+REM docker run -d -p 32905:32905 --restart always tor
