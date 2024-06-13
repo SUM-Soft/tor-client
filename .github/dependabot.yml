@@ -9,6 +9,7 @@ updates:
   - package-ecosystem: "github-actions"
     # Workflow files stored in the default location of `.github/workflows`. (You don't need to specify `/.github/workflows` for `directory`. You can use `directory: "/"`.)
     directory: "/"
+    open-pull-requests-limit: 1
     schedule:
       interval: "weekly"
       time: "00:30"
@@ -16,6 +17,7 @@ updates:
   # Maintain dependencies for Docker
   - package-ecosystem: "docker"
     directory: "/"
+    open-pull-requests-limit: 1
     schedule:
       interval: "weekly"
       time: "01:30"
