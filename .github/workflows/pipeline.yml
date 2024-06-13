@@ -16,7 +16,7 @@ env:
 
 jobs:
   pipeline:
-    name: Build, run test & publish
+    name: Build and run test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -39,19 +39,6 @@ jobs:
 
       - name: Test the container image
         run: curl --socks5 localhost:32905 --socks5-hostname localhost:32905 https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
-
-#      - name: Login to Google Artifact Registry
-#        uses: docker/login-action@v3
-#        with:
-#          registry: ${{ env.GAR }}
-#          username: _json_key
-#          password: ${{ secrets.GCP_GITHUB_ACTIONS_SA_CREDENTIALS }}
-#
-#      - name: Tag & Push image
-#        run: |
-#          docker tag ${{ env.IMAGE_NAME }} ${{ env.IMAGE_NAME }}:latest
-#          docker tag ${{ env.IMAGE_NAME }} ${{ env.IMAGE_NAME }}:${{ env.SHORT_SHA }}
-#          docker push ${{ env.IMAGE_NAME }} --all-tags
 
   auto-merge:
     if: github.actor == 'dependabot[bot]'
