@@ -12,10 +12,11 @@ concurrency:
 
 jobs:
   build:
-    uses: ./.github/workflows/build_test.yml
+    uses: ./.github/workflows/build.yml
     secrets: inherit
 
   deploy:
+    if: github.actor != 'dependabot[bot]'
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
     with:
