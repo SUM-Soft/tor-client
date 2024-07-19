@@ -1,0 +1,29 @@
+name: Deploy to VPS
+
+on:
+  workflow_call:
+    inputs:
+      full_image_name:
+        description: "Image name with short git commit SHA"
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      full_image_name:
+        description: "Image name with short git commit SHA"
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to VPS
+    steps:
+      - uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            whoami
+            ls -al
