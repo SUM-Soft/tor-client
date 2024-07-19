@@ -27,6 +27,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
+          script_stop: true
           script: |
             docker container stop ${{ env.CONTAINER_NAME }}
             docker container rm ${{ env.CONTAINER_NAME }}
