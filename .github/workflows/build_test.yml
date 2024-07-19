@@ -3,9 +3,9 @@ name: Build, Test and Publish
 on:
   workflow_call:
     outputs:
-      full_image_name:
-        description: "Image name with short git commit SHA"
-        value: ${{ jobs.build_test.outputs.output1 }}
+      version:
+        description: "Short git commit SHA"
+        value: ${{ jobs.build_test.outputs.version }}
 
 env:
   IMAGE_NAME: torik24/tor-client
@@ -15,7 +15,7 @@ jobs:
     name: Build, Test and Publish
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.short-sha.outputs.full_image_name }}
+      version: ${{ steps.short-sha.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,13 +25,13 @@ jobs:
         run: |
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
           echo "SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
-          echo "full_image_name=${{ env.IMAGE_NAME }}:$calculatedSha" >> $GITHUB_OUTPUT
+          echo "version=$calculatedSha" >> $GITHUB_OUTPUT
 
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ env.IMAGE_NAME }}
+          images: ${{ vars.IMAGE_NAME }}
           tags: |
             type=raw,value=latest
             type=raw,value=${{ env.SHORT_SHA }}
@@ -54,7 +54,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run the container image
-        run: docker run -d -p 32905:32905 ${{ env.IMAGE_NAME }}:latest
+        run: docker run -d -p 32905:32905 ${{ vars.IMAGE_NAME }}:latest
 
       - name: Sleep for 30 seconds
         run: sleep 30s
@@ -65,4 +65,4 @@ jobs:
 
       - name: Push the container image
         run: |
-          docker push ${{ env.IMAGE_NAME }} --all-tags
+          docker push ${{ vars.IMAGE_NAME }} --all-tags

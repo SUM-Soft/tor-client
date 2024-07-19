@@ -3,15 +3,16 @@ name: Deploy to VPS
 on:
   workflow_call:
     inputs:
-      full_image_name:
-        description: "Image name with short git commit SHA"
+      version:
+        description: version tag
         required: true
         type: string
   workflow_dispatch:
     inputs:
-      full_image_name:
-        description: "Image name with short git commit SHA"
+      version:
+        description: version tag
         required: true
+        default: latest
         type: string
 
 env:
@@ -29,7 +30,8 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script_stop: true
           script: |
+            echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
             docker container stop ${{ env.CONTAINER_NAME }}
             docker container rm ${{ env.CONTAINER_NAME }}
-            docker run -d -p 32905:32905 --restart always --name ${{ env.CONTAINER_NAME }} ${{ inputs.full_image_name }}
+            docker run -d -p 32905:32905 --restart always --name ${{ env.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}:${{ inputs.version }}
             docker ps

@@ -7,7 +7,7 @@ on:
   pull_request:
 
 concurrency:
-  group: ${{github.ref_name}}
+  group: ${{ github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     secrets: inherit
     with:
-      full_image_name: ${{ needs.build.outputs.full_image_name }}
+      version: ${{ needs.build.outputs.version }}
     needs: build
 
   auto-merge:
