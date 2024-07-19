@@ -5,7 +5,7 @@ on:
     outputs:
       version:
         description: "Short git commit SHA"
-        value: ${{ jobs.build_test.outputs.version }}
+        value: ${{ jobs.build.outputs.version }}
 
 jobs:
   build:
