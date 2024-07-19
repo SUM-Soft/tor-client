@@ -13,9 +13,11 @@ concurrency:
 jobs:
   build:
     uses: ./.github/workflows/build_test.yml
+    secrets: inherit
 
   deploy:
     uses: ./.github/workflows/deploy.yml
+    secrets: inherit
     with:
       full_image_name: ${{ needs.build.outputs.full_image_name }}
     needs: build
