@@ -24,7 +24,7 @@ jobs:
         run: |
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
           echo "SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
-          echo "full_image_name=${{ env.IMAGE_NAME }}:$calculatedSha" >> $GITHUB_OUTPUT
+          echo "full_image_name=${{ env.IMAGE_NAME }}:$full_image_name" >> $GITHUB_OUTPUT
 
       - name: Docker meta
         id: meta

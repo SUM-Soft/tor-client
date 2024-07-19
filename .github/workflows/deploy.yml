@@ -29,5 +29,6 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
             docker container stop ${{ env.CONTAINER_NAME }}
+            docker container rm ${{ env.CONTAINER_NAME }}
             docker run -d -p 32905:32905 --restart always --name ${{ env.CONTAINER_NAME }} ${{ inputs.full_image_name }}
             docker ps
