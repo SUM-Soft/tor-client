@@ -52,9 +52,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Display images
-        run: docker images
-
       - name: Run the container image
         run: docker run -d -p 32905:32905 ${{ env.IMAGE_NAME }}:latest
 
@@ -64,6 +61,10 @@ jobs:
 
       - name: Test the container image
         run: curl --socks5 localhost:32905 --socks5-hostname localhost:32905 https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
+
+      - name: Push the container image
+        run: |
+          docker push ${{ env.IMAGE_NAME }} --all-tags
 
   auto-merge:
     if: github.actor == 'dependabot[bot]'
