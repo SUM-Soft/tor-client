@@ -4,7 +4,7 @@ on:
   workflow_call:
     outputs:
       version:
-        description: "Short git commit SHA"
+        description: "From version.txt"
         value: ${{ jobs.build.outputs.version }}
 
 jobs:
@@ -12,17 +12,14 @@ jobs:
     name: Build, Test and Publish
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.short-sha.outputs.version }}
+      version: ${{ steps.get-version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set short git commit SHA
-        id: short-sha
-        run: |
-          calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          echo "SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
-          echo "version=$calculatedSha" >> $GITHUB_OUTPUT
+      - name: Get version from version.txt
+        id: get-version
+        run: echo "version=$(cat version.txt)" >> $GITHUB_OUTPUT
 
       - name: Docker meta
         id: meta
@@ -31,7 +28,7 @@ jobs:
           images: ${{ vars.IMAGE_NAME }}
           tags: |
             type=raw,value=latest
-            type=raw,value=${{ env.SHORT_SHA }}
+            type=raw,value=${{ steps.get-version.outputs.version }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
