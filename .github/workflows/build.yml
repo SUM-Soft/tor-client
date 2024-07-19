@@ -60,5 +60,4 @@ jobs:
 
       - name: Push the container image
         if: github.actor != 'dependabot[bot]'
-        run: |
-          docker push ${{ vars.IMAGE_NAME }} --all-tags
+        run: docker push ${{ vars.IMAGE_NAME }} --all-tags
