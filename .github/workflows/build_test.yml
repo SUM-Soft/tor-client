@@ -7,10 +7,6 @@ on:
         description: "Image name with short git commit SHA"
         value: ${{ jobs.build.outputs.output1 }}
 
-concurrency:
-  group: ${{github.ref_name}}
-  cancel-in-progress: false
-
 env:
   IMAGE_NAME: torik24/tor-client
 
