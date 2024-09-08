@@ -1,4 +1,4 @@
-FROM alpine:3.20.2
+FROM alpine:3.20.3
 
 HEALTHCHECK --interval=60s --timeout=30s --start-period=30s \
   CMD curl --fail --socks5 localhost:32905 --socks5-hostname localhost:32905 https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
