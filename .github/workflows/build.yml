@@ -49,14 +49,14 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run the container image
-        run: docker run -d -p 32905:32905 ${{ vars.IMAGE_NAME }}:latest
+        run: docker run -d -p 1080:1080 -e USERNAME=${{ secrets.TOR_CLIENT_USER }} -e PASSWORD=${{ secrets.TOR_CLIENT_PASSWORD }} ${{ vars.IMAGE_NAME }}:latest
 
       - name: Sleep for 30 seconds
         run: sleep 30s
         shell: bash
 
       - name: Test the container image
-        run: curl --socks5 localhost:32905 --socks5-hostname localhost:32905 https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
+        run: curl --fail --socks5-hostname localhost:1080 --proxy-user "${{ secrets.TOR_CLIENT_USER }}:${{ secrets.TOR_CLIENT_PASSWORD }}" https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
 
       - name: Push the container image
         if: github.actor != 'dependabot[bot]'

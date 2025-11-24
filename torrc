@@ -1,7 +1,7 @@
 Log notice stdout
 Log warn stderr
 Log err stderr
-SocksPort 0.0.0.0:32905
+SocksPort 127.0.0.1:9050
 EntryNodes {nl},{de} StrictNodes 0
 ExitNodes {nl},{de} StrictNodes 0
 MaxCircuitDirtiness 10
