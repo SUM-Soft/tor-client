@@ -9,41 +9,25 @@ if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ]; then
     PASSWORD=${PASSWORD:-password}
 fi
 
-echo "Configuring gost v3 proxy..."
-GOST_CONF_DIR=/etc/gost
-mkdir -p $GOST_CONF_DIR
+echo "Configuring 3proxy..."
+PROXY_CONF_DIR=/etc/3proxy
+mkdir -p $PROXY_CONF_DIR
 
-# Dynamically create the gost config file for v3
-cat <<EOF > $GOST_CONF_DIR/gost.yml
-chains:
-  - name: tor-chain
-    hops:
-      - name: tor-hop
-        nodes:
-          - name: tor-node
-            addr: 127.0.0.1:9050
-            connector:
-              type: socks5
-services:
-  - name: socks5-proxy
-    addr: ":1080"
-    handler:
-      type: socks5
-      auths:
-        - username: "${USERNAME}"
-          password: "${PASSWORD}"
-    listener:
-      type: tcp
-    chain: tor-chain
-log:
-  format: text
-  level: warn
+# Dynamically create the 3proxy config file
+cat <<EOF > $PROXY_CONF_DIR/3proxy.cfg
+fakeresolve
+timeouts 10 30 60 60 180 1800 30 60
+auth strong
+users ${USERNAME}:CL:${PASSWORD}
+allow ${USERNAME}
+parent 1000 socks5+ 127.0.0.1 9050
+socks -p1080
 EOF
-echo "gost configured."
+echo "3proxy configured."
 
-echo "Starting gost SOCKS5 proxy in the background..."
-su-exec gost gost -C $GOST_CONF_DIR/gost.yml &
-echo "gost proxy started."
+echo "Starting 3proxy in the background..."
+3proxy $PROXY_CONF_DIR/3proxy.cfg &
+echo "3proxy started."
 
 echo "Starting Tor. It may take a minute to bootstrap and connect to the network."
 echo "You can monitor the logs below. Look for 'Bootstrapped 100%' before connecting your client."

@@ -1,6 +1,6 @@
 # Tor Client with Authenticated SOCKS5 Proxy
 
-This project provides a Docker container running a Tor client with an authenticated SOCKS5 proxy powered by `gost`.
+This project provides a Docker container running a Tor client with an authenticated SOCKS5 proxy powered by `3proxy`.
 
 ## Build the image
 
@@ -34,7 +34,7 @@ Configure your application to use a **SOCKS5 proxy** at `127.0.0.1:1080` with th
 You can test the proxy with `curl`:
 
 ```bash
-curl --socks5-hostname 127.0.0.1:1080 --proxy-user "myuser:mypassword" https://check.torproject.org/api/ip
+curl --socks5 127.0.0.1:1080 --proxy-user "myuser:mypassword" https://check.torproject.org/api/ip
 ```
 
 The output should show that you are connected through Tor:

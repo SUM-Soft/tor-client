@@ -56,7 +56,7 @@ jobs:
         shell: bash
 
       - name: Test the container image
-        run: curl --socks5-hostname localhost:1080 --proxy-user "${{ secrets.TOR_CLIENT_USER }}:${{ secrets.TOR_CLIENT_PASSWORD }}" https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
+        run: curl --socks5 localhost:1080 --proxy-user "${{ secrets.TOR_CLIENT_USER }}:${{ secrets.TOR_CLIENT_PASSWORD }}" https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
 
       - name: Push the container image
         if: github.actor != 'dependabot[bot]'
