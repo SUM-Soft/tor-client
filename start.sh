@@ -11,7 +11,6 @@ fi
 
 echo "Configuring 3proxy..."
 PROXY_CONF_DIR=/etc/3proxy
-mkdir -p $PROXY_CONF_DIR
 
 # Dynamically create the 3proxy config file
 cat <<EOF > $PROXY_CONF_DIR/3proxy.cfg
@@ -32,4 +31,4 @@ echo "3proxy started."
 echo "Starting Tor. It may take a minute to bootstrap and connect to the network."
 echo "You can monitor the logs below. Look for 'Bootstrapped 100%' before connecting your client."
 # Start tor in the foreground as the tor user
-exec su-exec tor /usr/bin/tor -f /etc/torrc
+exec /usr/bin/tor -f /etc/torrc
