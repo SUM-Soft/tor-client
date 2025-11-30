@@ -14,7 +14,14 @@ jobs:
     outputs:
       version: ${{ steps.get-version.outputs.version }}
     steps:
-      - name: Checkout
+      - name: Checkout PR head
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout default branch
+        if: github.event_name != 'pull_request_target'
         uses: actions/checkout@v6
 
       - name: Get version from version.txt
