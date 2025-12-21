@@ -34,4 +34,18 @@ jobs:
             docker container stop ${{ env.CONTAINER_NAME }} || true && docker container rm ${{ env.CONTAINER_NAME }} || true
             docker run -d -p 1080:1080 -e USERNAME=${{ secrets.TOR_CLIENT_USER }} -e PASSWORD=${{ secrets.TOR_CLIENT_PASSWORD }} \
             --restart always --name ${{ env.CONTAINER_NAME }} ${{ vars.IMAGE_NAME }}:${{ inputs.version }}
-            docker ps
+            
+            echo "Waiting for container to become healthy..."
+            for i in {1..10}; do
+              STATUS=$(docker inspect --format '{{.State.Health.Status}}' ${{ env.CONTAINER_NAME }})
+              echo "Container status: $STATUS"
+              if [ "$STATUS" = "healthy" ]; then
+                echo "Container is healthy!"
+                exit 0
+              fi
+              sleep 10
+            done
+            
+            echo "Container did not become healthy in time."
+            docker logs ${{ env.CONTAINER_NAME }}
+            exit 1
