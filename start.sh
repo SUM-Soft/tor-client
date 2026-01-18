@@ -40,7 +40,7 @@ elif [ -f "/etc/tor/torrc" ]; then
     TOR_CONF="/etc/tor/torrc"
 else
     echo "Generating default torrc"
-    TOR_CONF="/etc/torrc.default"
+    TOR_CONF="/var/lib/tor/torrc.default"
     cat <<EOF > "$TOR_CONF"
 Log notice stdout
 Log warn stderr
