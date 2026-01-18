@@ -30,5 +30,24 @@ echo "3proxy started."
 
 echo "Starting Tor. It may take a minute to bootstrap and connect to the network."
 echo "You can monitor the logs below. Look for 'Bootstrapped 100%' before connecting your client."
+
+# Determine which torrc to use
+if [ -n "$TORRC_PATH" ]; then
+    echo "Using custom torrc from TORRC_PATH: $TORRC_PATH"
+    TOR_CONF="$TORRC_PATH"
+elif [ -f "/etc/tor/torrc" ]; then
+    echo "Using found torrc at /etc/tor/torrc"
+    TOR_CONF="/etc/tor/torrc"
+else
+    echo "Generating default torrc"
+    TOR_CONF="/etc/torrc.default"
+    cat <<EOF > "$TOR_CONF"
+Log notice stdout
+Log warn stderr
+Log err stderr
+SocksPort 127.0.0.1:9050
+EOF
+fi
+
 # Start tor in the foreground as the tor user
-exec /usr/bin/tor -f /etc/torrc
+exec /usr/bin/tor -f "$TOR_CONF"

@@ -9,7 +9,6 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
   && apk --update --no-cache add tor curl 3proxy \
   && rm -rf /var/cache/apk/*
 
-COPY torrc /etc/torrc
 COPY start.sh /start.sh
 
 RUN sed -i 's/\r$//' /start.sh && chmod +x /start.sh
