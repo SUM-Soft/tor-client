@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CONTAINER_NAME: tor-client-test
+      TEST_USER: some-username
+      TEST_PASSWORD: some-password
     outputs:
       version: ${{ steps.get-version.outputs.version }}
     steps:
@@ -63,7 +65,14 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run the container image
-        run: docker run --name ${{ env.CONTAINER_NAME }} -d -p 1080:1080 -e USERNAME=${{ secrets.TOR_CLIENT_USER }} -e PASSWORD=${{ secrets.TOR_CLIENT_PASSWORD }} ghcr.io/${{ steps.repo_lowercase.outputs.name }}:latest
+        run: |
+          docker run \
+            --name ${{ env.CONTAINER_NAME }} \
+            -d \
+            -p 1080:1080 \
+            -e USERNAME=${{ env.TEST_USER }} \
+            -e PASSWORD=${{ env.TEST_PASSWORD }} \
+            ghcr.io/${{ steps.repo_lowercase.outputs.name }}:latest
 
       - name: Wait for container to become healthy
         run: |
@@ -82,7 +91,9 @@ jobs:
           exit 1
 
       - name: Test the container image
-        run: curl --socks5 localhost:1080 --proxy-user "${{ secrets.TOR_CLIENT_USER }}:${{ secrets.TOR_CLIENT_PASSWORD }}" https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
+        run: |
+          curl --socks5 localhost:1080 --proxy-user "${{ env.TEST_USER }}:${{ env.TEST_PASSWORD }}" https://check.torproject.org/api/ip |
+          grep '"IsTor":true' || exit 1
 
       - name: Push the container image
         if: github.actor != 'dependabot[bot]'
