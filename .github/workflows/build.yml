@@ -28,11 +28,15 @@ jobs:
         id: get-version
         run: echo "version=$(cat version.txt)" >> $GITHUB_OUTPUT
 
+      - name: Get lowercased repository name
+        id: repo_lowercase
+        run: echo "name=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          images: ghcr.io/${{ steps.repo_lowercase.outputs.name }}
           tags: |
             type=raw,value=latest
             type=raw,value=${{ steps.get-version.outputs.version }}
@@ -57,7 +61,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run the container image
-        run: docker run -d -p 1080:1080 -e USERNAME=${{ secrets.TOR_CLIENT_USER }} -e PASSWORD=${{ secrets.TOR_CLIENT_PASSWORD }} ghcr.io/${{ github.repository }}:${{ steps.get-version.outputs.version }}
+        run: docker run -d -p 1080:1080 -e USERNAME=${{ secrets.TOR_CLIENT_USER }} -e PASSWORD=${{ secrets.TOR_CLIENT_PASSWORD }} ghcr.io/${{ steps.repo_lowercase.outputs.name }}:${{ steps.get-version.outputs.version }}
 
       - name: Sleep for 30 seconds
         run: sleep 30s
