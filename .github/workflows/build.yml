@@ -95,6 +95,52 @@ jobs:
           curl --socks5 localhost:1080 --proxy-user "${{ env.TEST_USER }}:${{ env.TEST_PASSWORD }}" https://check.torproject.org/api/ip |
           grep '"IsTor":true' || exit 1
 
+      - name: Stop default container
+        if: always()
+        run: docker rm -f ${{ env.CONTAINER_NAME }} || true
+
+      - name: Test Custom torrc via Mount
+        run: |
+          # Create custom torrc
+          echo "Log notice stdout" > custom.torrc
+          echo "SocksPort 0.0.0.0:1080" >> custom.torrc
+          echo "MaxCircuitDirtiness 10" >> custom.torrc
+
+          # Run with mount
+          docker run --name ${{ env.CONTAINER_NAME }} -d -p 1080:1080 \
+            -e USERNAME=${{ env.TEST_USER }} -e PASSWORD=${{ env.TEST_PASSWORD }} \
+            -v $(pwd)/custom.torrc:/etc/tor/torrc \
+            ghcr.io/${{ steps.repo_lowercase.outputs.name }}:latest
+
+          # Wait for healthy
+          echo "Waiting for container..."
+          timeout 60s sh -c 'until [ "$(docker inspect -f {{.State.Health.Status}} ${{ env.CONTAINER_NAME }})" = "healthy" ]; do sleep 2; done'
+
+          # Verify logs
+          docker logs ${{ env.CONTAINER_NAME }} | grep "Using found torrc at /etc/tor/torrc" || exit 1
+          
+          # Clean up
+          docker rm -f ${{ env.CONTAINER_NAME }}
+
+      - name: Test Custom torrc via Env Var
+        run: |
+          # Run with env var and mount to custom location
+          docker run --name ${{ env.CONTAINER_NAME }} -d -p 1080:1080 \
+            -e USERNAME=${{ env.TEST_USER }} -e PASSWORD=${{ env.TEST_PASSWORD }} \
+            -v $(pwd)/custom.torrc:/custom/path/torrc \
+            -e TORRC_PATH=/custom/path/torrc \
+            ghcr.io/${{ steps.repo_lowercase.outputs.name }}:latest
+
+          # Wait for healthy
+          echo "Waiting for container..."
+          timeout 60s sh -c 'until [ "$(docker inspect -f {{.State.Health.Status}} ${{ env.CONTAINER_NAME }})" = "healthy" ]; do sleep 2; done'
+
+          # Verify logs
+          docker logs ${{ env.CONTAINER_NAME }} | grep "Using custom torrc from TORRC_PATH: /custom/path/torrc" || exit 1
+          
+          # Clean up
+          docker rm -f ${{ env.CONTAINER_NAME }}
+
       - name: Push the container image
         if: github.actor != 'dependabot[bot]'
         run: docker push ghcr.io/${{ steps.repo_lowercase.outputs.name }} --all-tags
