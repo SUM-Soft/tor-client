@@ -15,14 +15,6 @@ jobs:
     uses: ./.github/workflows/build.yml
     secrets: inherit
 
-  deploy:
-    if: github.actor != 'dependabot[bot]'
-    uses: ./.github/workflows/deploy.yml
-    secrets: inherit
-    with:
-      version: ${{ needs.build.outputs.version }}
-    needs: build
-
   auto-merge:
     if: github.actor == 'dependabot[bot]'
     needs: build
