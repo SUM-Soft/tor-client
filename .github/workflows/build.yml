@@ -103,7 +103,7 @@ jobs:
         run: |
           # Create custom torrc
           echo "Log notice stdout" > custom.torrc
-          echo "SocksPort 0.0.0.0:1080" >> custom.torrc
+          echo "SocksPort 127.0.0.1:9050" >> custom.torrc
           echo "MaxCircuitDirtiness 10" >> custom.torrc
 
           # Run with mount
