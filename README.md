@@ -1,4 +1,5 @@
 # Tor Client with Authenticated SOCKS5 Proxy
+[![Pipeline](https://github.com/SUM-Soft/tor-client/actions/workflows/pipeline.yml/badge.svg)](https://github.com/SUM-Soft/OrpheusVPN/actions/workflows/pipeline.yml)
 
 This project provides a Docker container running a Tor client with an authenticated SOCKS5 proxy powered by `3proxy`.
 
