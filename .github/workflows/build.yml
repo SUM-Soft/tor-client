@@ -72,4 +72,4 @@ jobs:
 
       - name: Push the container image
         if: github.actor != 'dependabot[bot]'
-        run: docker push ${{ steps.repo_lowercase.outputs.name }} --all-tags
+        run: docker push ghcr.io/${{ steps.repo_lowercase.outputs.name }}:${{ steps.get-version.outputs.version }} --all-tags
