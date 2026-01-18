@@ -28,24 +28,11 @@ When the container starts, wait for the Tor process to bootstrap. You will see l
 
 ## Custom torrc Configuration
 
-You can provide your own `torrc` configuration file in two ways:
-
-1.  **Mounting to `/etc/tor/torrc`**:
-    Only this location is checked for a custom config if the environment variable is not set.
+You can provide your own `torrc` configuration file mounting to `/etc/tor/torrc`:
 
     ```bash
     docker run --rm -p 1080:1080 \
       -v $(pwd)/my-custom-torrc:/etc/tor/torrc \
-      tor-client
-    ```
-
-2.  **Using `TORRC_PATH` environment variable**:
-    Direct the container to a specific custom configuration file location.
-
-    ```bash
-    docker run --rm -p 1080:1080 \
-      -v $(pwd)/my-custom-torrc:/custom/torrc \
-      -e TORRC_PATH=/custom/torrc \
       tor-client
     ```
 

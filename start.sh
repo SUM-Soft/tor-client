@@ -32,10 +32,7 @@ echo "Starting Tor. It may take a minute to bootstrap and connect to the network
 echo "You can monitor the logs below. Look for 'Bootstrapped 100%' before connecting your client."
 
 # Determine which torrc to use
-if [ -n "$TORRC_PATH" ]; then
-    echo "Using custom torrc from TORRC_PATH: $TORRC_PATH"
-    TOR_CONF="$TORRC_PATH"
-elif [ -f "/etc/tor/torrc" ]; then
+if [ -f "/etc/tor/torrc" ]; then
     echo "Using found torrc at /etc/tor/torrc"
     TOR_CONF="/etc/tor/torrc"
 else
