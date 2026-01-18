@@ -11,6 +11,8 @@ jobs:
   build:
     name: Build, Test and Publish
     runs-on: ubuntu-latest
+    env:
+      CONTAINER_NAME: tor-client-test
     outputs:
       version: ${{ steps.get-version.outputs.version }}
     steps:
@@ -61,11 +63,23 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run the container image
-        run: docker run -d -p 1080:1080 -e USERNAME=${{ secrets.TOR_CLIENT_USER }} -e PASSWORD=${{ secrets.TOR_CLIENT_PASSWORD }} ghcr.io/${{ steps.repo_lowercase.outputs.name }}:${{ steps.get-version.outputs.version }}
+        run: docker run --name ${{ env.CONTAINER_NAME }} -d -p 1080:1080 -e USERNAME=${{ secrets.TOR_CLIENT_USER }} -e PASSWORD=${{ secrets.TOR_CLIENT_PASSWORD }} ghcr.io/${{ steps.repo_lowercase.outputs.name }}:latest
 
-      - name: Sleep for 30 seconds
-        run: sleep 30s
-        shell: bash
+      - name: Wait for container to become healthy
+        run: |
+          echo "Waiting for container to become healthy..."
+          for i in {1..10}; do
+            STATUS=$(docker inspect --format '{{.State.Health.Status}}' ${{ env.CONTAINER_NAME }})
+            echo "Container status: $STATUS"
+            if [ "$STATUS" = "healthy" ]; then
+              echo "Container is healthy!"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Container did not become healthy in time."
+          docker logs ${{ env.CONTAINER_NAME }}
+          exit 1
 
       - name: Test the container image
         run: curl --socks5 localhost:1080 --proxy-user "${{ secrets.TOR_CLIENT_USER }}:${{ secrets.TOR_CLIENT_PASSWORD }}" https://check.torproject.org/api/ip | grep '"IsTor":true' || exit 1
